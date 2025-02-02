@@ -1,0 +1,16 @@
+# Ignore all CMake generated files
+**/CMakeFiles/
+**/CMakeCache.txt
+**/cmake_install.cmake
+**/Makefile
+
+# Ignore library build
+test/test/build/
+
+# Ignore test executable
+test/test/runTests
+
+# Ignore test coverage info
+coverage
+**/coverage.info
+**/coverage_filtered.info
