@@ -23,7 +23,7 @@ if [ "$1" == "--coverage" ]; then
     # create coverage directory
     mkdir -p ../coverage
     # colect coverage info
-    lcov --capture --directory . --output-file coverage.info
+    lcov --capture --directory . --output-file coverage.info --rc lcov_branch_coverage=1 --ignore-errors mismatch
     # remove test code, google test code, and other library code coverage from report
     lcov --remove coverage.info '/usr/*' '*/gtest/*' '*/gmock/*' '*/test/*' --output-file coverage_filtered.info
     # generate coverage report

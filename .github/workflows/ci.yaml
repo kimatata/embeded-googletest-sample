@@ -29,13 +29,9 @@ jobs:
           make
           sudo make install
 
-      - name: Run unit tests
-        run: |
-          chmod +x runTests.sh
-          ./runTests.sh
-
       - name: Run unit tests with coverage
         run: |
+          chmod +x runTests.sh
           ./runTests.sh --coverage
 
       - name: Upload coverage report
