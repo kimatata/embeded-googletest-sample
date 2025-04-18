@@ -28,16 +28,15 @@ jobs:
           cmake -DCMAKE_INSTALL_PREFIX=/usr/local .
           make
           sudo make install
-          cd ../..
 
       - name: Run unit tests
         run: |
-          chmod +x build.sh
-          ./build.sh
+          chmod +x runTests.sh
+          ./runTests.sh
 
       - name: Run unit tests with coverage
         run: |
-          ./build.sh --coverage
+          ./runTests.sh --coverage
 
       - name: Upload coverage report
         if: success()
