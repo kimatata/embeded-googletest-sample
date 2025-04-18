@@ -28,6 +28,7 @@ jobs:
           cmake -DCMAKE_INSTALL_PREFIX=/usr/local .
           make
           sudo make install
+          cd ../..
 
       - name: Run unit tests
         run: |
