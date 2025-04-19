@@ -8,6 +8,20 @@ on:
   workflow_dispatch:
 
 jobs:
+  format-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install clang-format
+        run: sudo apt install -y clang-format
+
+      - name: Run clang-format check
+        run: |
+          chmod +x ./checkFormat.sh
+          ./checkFormat.sh
+
   build-and-test:
     runs-on: ubuntu-latest
 
