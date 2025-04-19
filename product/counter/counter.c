@@ -10,7 +10,7 @@ void Counter_Update(Counter *counter) {
 
     // when overflows
     if (counter->value == 0) {
-        counter->overflowCount++;
+        // counter->overflowCount++;
     }
 }
 
