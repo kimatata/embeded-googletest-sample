@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # check coverage flag
 if [ "$1" == "--coverage" ]; then
