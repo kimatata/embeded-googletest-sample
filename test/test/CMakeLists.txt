@@ -5,22 +5,33 @@ project(embeded-googletest-sample
 )
 
 # Coverage flags for GCC/Clang
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage")
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
+add_compile_options(--coverage)
+add_link_options(--coverage)
 
 # Locate GTest (includes Google Mock as well)
 find_package(GTest REQUIRED)
 
-include_directories(${GTEST_INCLUDE_DIRS})
-
 # Add the library directory
 add_subdirectory(../double/ build/double)
-add_subdirectory(../../product/armCtrl build/armCtrl)
-add_subdirectory(../../product/counter build/counter)
-add_subdirectory(../../product/fileManager build/fileManager)
-add_subdirectory(../../product/ledCtrl build/ledCtrl)
+add_subdirectory(../../product build/product)
 
-# Link runTests with what we want to test and the GTest and pthread library
-add_executable(runTests testMain.cpp)
-target_link_libraries(runTests ${GTEST_LIBRARIES} gmock gmock_main pthread double armCtrl counter fileManager ledCtrl)
+# Link runTests
+add_executable(runTests
+    testMain.cpp
+    testArmCtrl.cpp
+    testCounter.cpp
+    testFileManager.cpp
+    testLedCtrl.cpp
+    testLedImpl.cpp
+)
+
+# Link test executable against gtest & gmock libraries
+target_link_libraries(runTests
+    PRIVATE
+    GTest::gtest
+    GTest::gmock
+    GTest::gmock_main
+    pthread
+    double
+    product
+)
