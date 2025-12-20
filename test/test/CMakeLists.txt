@@ -17,7 +17,6 @@ add_subdirectory(../../product build/product)
 
 # Link runTests
 add_executable(runTests
-    testMain.cpp
     testArmCtrl.cpp
     testCounter.cpp
     testFileManager.cpp
