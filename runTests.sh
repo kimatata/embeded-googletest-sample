@@ -1,33 +1,54 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
-# check coverage flag
-if [ "$1" == "--coverage" ]; then
+ROOT_DIR="$(cd "$(dirname "$0")" && pwd)"
+TEST_SRC_DIR="$ROOT_DIR/test/test"
+BUILD_DIR="$ROOT_DIR/build/test"
+COVERAGE_DIR="$ROOT_DIR/coverage"
+
+ENABLE_COVERAGE=OFF
+if [[ "${1:-}" == "--coverage" ]]; then
     echo "Coverage mode enabled."
-    COVERAGE_FLAGS="-DCMAKE_CXX_FLAGS=--coverage -DCMAKE_C_FLAGS=--coverage"
+    ENABLE_COVERAGE=ON
 else
     echo "Running tests without coverage."
-    COVERAGE_FLAGS=""
 fi
 
-# build
-cd test/test
-cmake $COVERAGE_FLAGS CMakeLists.txt
-make
+# Fresh out-of-source build dir (especially important for coverage runs)
+if [[ "$ENABLE_COVERAGE" == "ON" ]]; then
+  rm -rf "$BUILD_DIR"
+fi
+mkdir -p "$BUILD_DIR"
 
-# run test suites
-./runTests
+cmake -S "$TEST_SRC_DIR" -B "$BUILD_DIR"
+cmake --build "$BUILD_DIR" -j
 
-# if coverage enabled, generate coverage report
-if [ "$1" == "--coverage" ]; then
+"$BUILD_DIR/runTests"
+
+if [[ "$ENABLE_COVERAGE" == "ON" ]]; then
     echo "Generating coverage report..."
-    # create coverage directory
-    mkdir -p ../coverage
-    # colect coverage info
-    lcov --capture --directory . --output-file coverage.info --rc lcov_branch_coverage=1 --ignore-errors mismatch
-    # remove test code, google test code, and other library code coverage from report
-    lcov --remove coverage.info '/usr/*' '*/gtest/*' '*/gmock/*' '*/test/*' --output-file coverage_filtered.info
-    # generate coverage report
-    genhtml coverage_filtered.info --output-directory ../coverage
-    echo "Coverage report generated in root/coverage directory."
+    rm -rf "$COVERAGE_DIR"
+    mkdir -p "$COVERAGE_DIR"
+
+    # Capture from build tree; base-directory is repo root so lcov can resolve source paths correctly.
+    lcov --capture \
+      --directory "$BUILD_DIR" \
+      --base-directory "$ROOT_DIR" \
+      --output-file "$BUILD_DIR/coverage.info" \
+      --ignore-errors mismatch \
+      --rc branch_coverage=1
+
+    # Exclude external/system + tests themselves (adjust patterns as you like)
+    lcov --remove "$BUILD_DIR/coverage.info" \
+      '/usr/*' \
+      '*/test/*' \
+      '*/_deps/*' \
+      --output-file "$BUILD_DIR/coverage_filtered.info" \
+      --ignore-errors unused
+
+    genhtml "$BUILD_DIR/coverage_filtered.info" \
+      --output-directory "$COVERAGE_DIR" \
+      --branch-coverage
+
+    echo "Coverage report generated in: $COVERAGE_DIR"
 fi

@@ -4,13 +4,18 @@
 **/cmake_install.cmake
 **/Makefile
 
-# Ignore library build
-test/test/build/
+# # Ignore library build
+# test/test/build/
 
-# Ignore test executable
+# # Ignore test executable
 test/test/runTests
 
-# Ignore test coverage info
+# Ignore build directory
+build
+
+# # Ignore test coverage info
 coverage
 **/coverage.info
 **/coverage_filtered.info
+
+
