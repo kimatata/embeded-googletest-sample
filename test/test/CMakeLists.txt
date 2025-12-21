@@ -6,6 +6,7 @@ project(embeded-googletest-sample
 
 # Locate GTest (includes Google Mock as well)
 find_package(GTest REQUIRED)
+find_package(Threads REQUIRED)
 
 # Add the library directory
 add_subdirectory(../double/ build/double)
