@@ -4,7 +4,6 @@ project(embeded-googletest-sample
     HOMEPAGE_URL "https://github.com/kimatata/embeded-googletest-sample"
 )
 
-# Locate GTest (includes Google Mock as well)
 find_package(GTest REQUIRED)
 find_package(Threads REQUIRED)
 
@@ -32,9 +31,9 @@ target_link_libraries(runTests
     product
 )
 
-# Apply coverage ONLY to product (not to test C++ files)
+# Apply coverage to product and double (not to test C++ files)
 if(ENABLE_COVERAGE)
-    foreach(tgt IN ITEMS product)
+    foreach(tgt IN ITEMS product double)
         target_compile_options(${tgt} PRIVATE
             --coverage
             -O0
