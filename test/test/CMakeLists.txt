@@ -4,10 +4,6 @@ project(embeded-googletest-sample
     HOMEPAGE_URL "https://github.com/kimatata/embeded-googletest-sample"
 )
 
-# Coverage flags for GCC/Clang
-add_compile_options(--coverage)
-add_link_options(--coverage)
-
 # Locate GTest (includes Google Mock as well)
 find_package(GTest REQUIRED)
 
@@ -30,7 +26,18 @@ target_link_libraries(runTests
     GTest::gtest
     GTest::gmock
     GTest::gmock_main
-    pthread
+    Threads::Threads
     double
     product
 )
+
+# Apply coverage ONLY to product (not to test C++ files)
+if(ENABLE_COVERAGE)
+    foreach(tgt IN ITEMS product)
+        target_compile_options(${tgt} PRIVATE --coverage -O0 -g)
+        target_link_options(${tgt} PRIVATE --coverage)
+    endforeach()
+
+    # runTests needs --coverage at link time to collect .gcda from instrumented libs
+    target_link_options(runTests PRIVATE --coverage)
+endif()

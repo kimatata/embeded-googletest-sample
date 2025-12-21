@@ -20,7 +20,7 @@ if [[ "$ENABLE_COVERAGE" == "ON" ]]; then
 fi
 mkdir -p "$BUILD_DIR"
 
-cmake -S "$TEST_SRC_DIR" -B "$BUILD_DIR"
+cmake -S "$TEST_SRC_DIR" -B "$BUILD_DIR" -DENABLE_COVERAGE="$ENABLE_COVERAGE"
 cmake --build "$BUILD_DIR" -j
 
 "$BUILD_DIR/runTests"
@@ -44,7 +44,7 @@ if [[ "$ENABLE_COVERAGE" == "ON" ]]; then
       '*/test/*' \
       '*/_deps/*' \
       --output-file "$BUILD_DIR/coverage_filtered.info" \
-      --ignore-errors unused
+      --ignore-errors mismatch,gcov,unused
 
     genhtml "$BUILD_DIR/coverage_filtered.info" \
       --output-directory "$COVERAGE_DIR" \
