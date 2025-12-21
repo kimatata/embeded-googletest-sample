@@ -1,6 +1,10 @@
 #!/bin/bash
 
-FILES=$(find ./product ./test -type f \( -name "*.c" -o -name "*.h" -o -name "*.cpp" -o -name "*.hpp"  \))
+FILES=$(find ./product ./test -type f \
+    \( -name "*.c" -o -name "*.h" -o -name "*.cpp" -o -name "*.hpp" \) \
+    ! -path "*/build/*" \
+    ! -path "*/CMakeFiles/*" \
+    ! -path "*/_deps/*")
 
 FORMAT_FAILED=0
 

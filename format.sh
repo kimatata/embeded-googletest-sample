@@ -2,6 +2,11 @@
 
 echo "Running clang-format on source files in product/ and test/..."
 
-find ./product ./test -type f \( -name "*.c" -o -name "*.h" -o -name "*.cpp" -o -name "*.hpp" \) -exec clang-format -i {} +
+find ./product ./test -type f \
+  \( -name "*.c" -o -name "*.h" -o -name "*.cpp" -o -name "*.hpp" \) \
+  ! -path "*/build/*" \
+  ! -path "*/CMakeFiles/*" \
+  ! -path "*/_deps/*" \
+  -exec clang-format -i {} +
 
 echo "Formatting completed."
