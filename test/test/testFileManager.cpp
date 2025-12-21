@@ -50,12 +50,12 @@ TEST_F(TestFileManager, WriteLogHeader_EnQueueShouldBeCalledOnce) {
     buffer[1] = 0x11;
     buffer[2] = 0x22;
 
-    EXPECT_CALL(*g_mockFileManager, EnQueue(_)).WillOnce(Invoke([&](ST_QUEUE_ELEMENT *el) {
+    EXPECT_CALL(*g_mockFileManager, EnQueue(_)).WillOnce([&](ST_QUEUE_ELEMENT *el) {
         EXPECT_EQ(el->id, 2);
         EXPECT_EQ(el->src, buffer);
         EXPECT_EQ(el->size, 32);
         EXPECT_EQ(el->offset, 0);
-    }));
+    });
 
     FileManager_WriteLogHeader(&buffer[0], sizeof(buffer), 0);
 }
@@ -73,28 +73,28 @@ TEST_F(TestFileManager, CreateLogFile_EnQueueShouldBeCalledFourTimes) {
 
     EXPECT_CALL(*g_mockFileManager, EnQueue(_))
         .Times(4)
-        .WillOnce(Invoke([&](ST_QUEUE_ELEMENT *el) {
+        .WillOnce([&](ST_QUEUE_ELEMENT *el) {
             EXPECT_EQ(el->id, 1);
             EXPECT_EQ(el->size, 0);
             EXPECT_EQ(el->offset, 0);
-        }))
-        .WillOnce(Invoke([&](ST_QUEUE_ELEMENT *el) {
+        })
+        .WillOnce([&](ST_QUEUE_ELEMENT *el) {
             EXPECT_EQ(el->id, 2);
             EXPECT_EQ(el->src, header);
             EXPECT_EQ(el->size, 32);
             EXPECT_EQ(el->offset, 0);
-        }))
-        .WillOnce(Invoke([&](ST_QUEUE_ELEMENT *el) {
+        })
+        .WillOnce([&](ST_QUEUE_ELEMENT *el) {
             EXPECT_EQ(el->id, 3);
             EXPECT_EQ(el->src, payload);
             EXPECT_EQ(el->size, 128);
             EXPECT_EQ(el->offset, 0);
-        }))
-        .WillOnce(Invoke([&](ST_QUEUE_ELEMENT *el) {
+        })
+        .WillOnce([&](ST_QUEUE_ELEMENT *el) {
             EXPECT_EQ(el->id, 4);
             EXPECT_EQ(el->size, 0);
             EXPECT_EQ(el->offset, 0);
-        }));
+        });
 
     FileManager_CreateLogFile(&header[0], sizeof(header), &payload[0], sizeof(payload));
 }
