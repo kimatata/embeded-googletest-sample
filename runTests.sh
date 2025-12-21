@@ -14,7 +14,7 @@ else
     echo "Running tests without coverage."
 fi
 
-# Fresh out-of-source build dir (especially important for coverage runs)
+# Clean old build
 if [[ "$ENABLE_COVERAGE" == "ON" ]]; then
   rm -rf "$BUILD_DIR"
 fi
