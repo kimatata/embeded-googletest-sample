@@ -35,20 +35,22 @@ if [[ "$ENABLE_COVERAGE" == "ON" ]]; then
       --directory "$BUILD_DIR" \
       --base-directory "$ROOT_DIR" \
       --output-file "$BUILD_DIR/coverage.info" \
+      --rc branch_coverage=1 \
+      --rc geninfo_unexecuted_blocks=1 \
       --ignore-errors mismatch \
-      --rc branch_coverage=1
 
     # Exclude external/system + tests themselves (adjust patterns as you like)
     lcov --remove "$BUILD_DIR/coverage.info" \
-      '/usr/*' \
-      '*/test/*' \
-      '*/_deps/*' \
       --output-file "$BUILD_DIR/coverage_filtered.info" \
+      --rc branch_coverage=1 \
       --ignore-errors mismatch,gcov,unused
 
     genhtml "$BUILD_DIR/coverage_filtered.info" \
       --output-directory "$COVERAGE_DIR" \
-      --branch-coverage
+      --branch-coverage \
+      --rc genhtml_branch_coverage=1
 
     echo "Coverage report generated in: $COVERAGE_DIR"
+    echo ""
+    lcov --summary "$BUILD_DIR/coverage_filtered.info" --rc branch_coverage=1
 fi

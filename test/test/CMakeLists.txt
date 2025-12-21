@@ -34,7 +34,13 @@ target_link_libraries(runTests
 # Apply coverage ONLY to product (not to test C++ files)
 if(ENABLE_COVERAGE)
     foreach(tgt IN ITEMS product)
-        target_compile_options(${tgt} PRIVATE --coverage -O0 -g)
+        target_compile_options(${tgt} PRIVATE
+            --coverage
+            -O0
+            -g
+            -fprofile-arcs
+            -ftest-coverage
+        )
         target_link_options(${tgt} PRIVATE --coverage)
     endforeach()
 
